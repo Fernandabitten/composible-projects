@@ -1,54 +1,4 @@
 <script lang="ts">
-// import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
-
-// export default {
-//   props: ["modelValue", "calculateTotalPrice"],
-//   emits: ["update:modelValue"],
-//   setup(props, { emit }) {
-//     const pixPaymentData = ref({ key: "", amount: 0 });
-
-//     // Mascara a chave Pix
-//     const maskedPixData = computed(() => {
-//       const maskedKey = props.modelValue?.key?.replace(/.(?=.{4})/g, "*");
-//       const amount = props.calculateTotalPrice;
-//       return {
-//         ...props.modelValue,
-//         ...props.calculateItemTotal,
-//         key: maskedKey,
-//         amount,
-//       };
-//     });
-
-//     // Atualiza o valor do modelo com as mudanças em pixPaymentData
-//     watch(
-//       pixPaymentData,
-//       (newValue) => {
-//         emit("update:modelValue", newValue);
-//       },
-//       { deep: true }
-//     );
-
-//     // Atualiza pixPaymentData com o valor inicial do modelo
-//     onMounted(() => {
-//       pixPaymentData.value = { ...props.modelValue };
-//     });
-
-//     // Limpa o valor de pixPaymentData ao desmontar o componente
-//     onBeforeUnmount(() => {
-//       pixPaymentData.value = { key: "", amount: 0 };
-//     });
-
-//     const payWithPix = (amount) => {
-//       emit("payWithPix", amount);
-//     };
-//     return {
-//       pixPaymentData,
-//       maskedPixData,
-//       payWithPix,
-//     };
-//   },
-// };
-
 import { ref, computed, SetupContext } from "vue";
 
 export default {
@@ -62,6 +12,7 @@ export default {
       required: true,
     },
   },
+
   emits: ["update:modelValue", "payWithPix"],
   setup(props: any, { emit }: SetupContext) {
     const pixPaymentData = ref({ key: "", amount: 0 });

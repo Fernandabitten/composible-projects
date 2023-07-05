@@ -1,4 +1,4 @@
-# frontend
+# composible-projects
 
 ## Project setup
 ```

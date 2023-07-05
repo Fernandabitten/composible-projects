@@ -1,0 +1,113 @@
+<script lang="ts">
+// import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
+
+// export default {
+//   props: ["modelValue", "calculateTotalPrice"],
+//   emits: ["update:modelValue"],
+//   setup(props, { emit }) {
+//     const pixPaymentData = ref({ key: "", amount: 0 });
+
+//     // Mascara a chave Pix
+//     const maskedPixData = computed(() => {
+//       const maskedKey = props.modelValue?.key?.replace(/.(?=.{4})/g, "*");
+//       const amount = props.calculateTotalPrice;
+//       return {
+//         ...props.modelValue,
+//         ...props.calculateItemTotal,
+//         key: maskedKey,
+//         amount,
+//       };
+//     });
+
+//     // Atualiza o valor do modelo com as mudanças em pixPaymentData
+//     watch(
+//       pixPaymentData,
+//       (newValue) => {
+//         emit("update:modelValue", newValue);
+//       },
+//       { deep: true }
+//     );
+
+//     // Atualiza pixPaymentData com o valor inicial do modelo
+//     onMounted(() => {
+//       pixPaymentData.value = { ...props.modelValue };
+//     });
+
+//     // Limpa o valor de pixPaymentData ao desmontar o componente
+//     onBeforeUnmount(() => {
+//       pixPaymentData.value = { key: "", amount: 0 };
+//     });
+
+//     const payWithPix = (amount) => {
+//       emit("payWithPix", amount);
+//     };
+//     return {
+//       pixPaymentData,
+//       maskedPixData,
+//       payWithPix,
+//     };
+//   },
+// };
+
+import { ref, computed, SetupContext } from "vue";
+
+export default {
+  props: {
+    modelValue: {
+      type: Object,
+      required: true,
+    },
+    calculateTotalPrice: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: ["update:modelValue", "payWithPix"],
+  setup(props: any, { emit }: SetupContext) {
+    const pixPaymentData = ref({ key: "", amount: 0 });
+
+    const maskedPixData = computed(() => {
+      const maskedKey = props.modelValue?.key?.replace(/.(?=.{4})/g, "*");
+      const amount = props.calculateTotalPrice;
+      return {
+        ...props.modelValue,
+        ...props.calculateItemTotal,
+        key: maskedKey,
+        amount,
+      };
+    });
+
+    const payWithPix = (amount: number) => {
+      emit("payWithPix", amount);
+    };
+
+    return {
+      pixPaymentData,
+      maskedPixData,
+      payWithPix,
+    };
+  },
+};
+</script>
+<template>
+  <v-row class="text-left">
+    <v-col cols="12">
+      <h4>Pagamento via Pix</h4>
+    </v-col>
+    <v-col class="mt-0 pt-0">
+      <p>Chave Pix:</p>
+      <input v-model="maskedPixData.key" disabled />
+    </v-col>
+    <v-col class="mt-0 pt-0">
+      <label>Valor:</label>
+      <input v-model="maskedPixData.amount" type="number" disabled />
+    </v-col>
+    <v-btn
+      color="blue"
+      @click="payWithPix(maskedPixData.amount)"
+      variant="flat"
+    >
+      Pagar com Pix
+    </v-btn>
+  </v-row>
+</template>

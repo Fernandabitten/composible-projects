@@ -48,6 +48,7 @@ export default {
 <template>
   <div class="ml-10">
     <v-row class="mt-5">
+      nameee {{ name.length }}
       <v-col>
         <v-text-field
           label="Insira um nome ou apelido"
@@ -57,8 +58,14 @@ export default {
         ></v-text-field>
       </v-col>
       <v-col>
-        <v-btn color="blue" variant="outlined" size="x-large" @click="addName">
-          Adicionar nome
+        <v-btn
+          :disabled="name.length === 0"
+          color="blue"
+          variant="outlined"
+          size="x-large"
+          @click="addName"
+        >
+          Adicionar nome {{ name.length > 0 }}
         </v-btn>
       </v-col>
 

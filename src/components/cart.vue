@@ -10,6 +10,11 @@ interface Item {
   price: number;
 }
 
+interface PaymentData {
+  key: string;
+  amount: number;
+}
+
 export default {
   props: {
     items: {
@@ -22,19 +27,19 @@ export default {
       required: true,
     },
     incrementItem: {
-      type: Function,
+      type: Function as unknown as () => (item: Item) => void,
       required: true,
     },
     decrementItem: {
-      type: Function,
+      type: Function as unknown as () => (item: Item) => void,
       required: true,
     },
     calculateTotal: {
-      type: Function,
+      type: Function as unknown as () => (item: Item) => void,
       required: true,
     },
     deleteItem: {
-      type: Function,
+      type: Function as unknown as () => (item: Item) => void,
       required: true,
     },
   },
@@ -42,7 +47,14 @@ export default {
     billGen,
     paymentPix,
   },
-  setup(props: any, context: SetupContext) {
+  setup(props: {
+    items: Item[];
+    headers: { text: string; value: string }[];
+    incrementItem: (item: Item) => void;
+    decrementItem: (item: Item) => void;
+    calculateTotal: (item: Item) => void;
+    deleteItem: (item: Item) => void;
+  }) {
     const paymentMethod = ref(""); // opção de pagamento selecionada
 
     const calculateItemTotal = (item: Item) => {
@@ -57,7 +69,7 @@ export default {
       return totalPrice;
     });
 
-    const pixPaymentData = ref({
+    const pixPaymentData = ref<PaymentData>({
       key: "10001810148",
       amount: calculateTotalPrice.value,
     });
@@ -69,10 +81,8 @@ export default {
 
     const payWithPix = (amount: number) => {
       const { key } = pixPaymentData.value;
-      console.log("Chave Pixxxxxx", key, "valor", amount);
 
       if (!key || key.trim() === "" || amount <= 0) {
-        console.log("Chave Pix ou valor inválidos");
         return;
       }
 
